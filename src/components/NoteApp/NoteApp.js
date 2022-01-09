@@ -91,8 +91,8 @@ export default function NoteApp() {
         }
         setDisabled(true)
         setSelectedNote(idx)
-        setHeading(notes[idx].heading)
-        setContent(notes[idx].content)
+        setHeading(notes[idx].noteTitle)
+        setContent(notes[idx].noteBody)
         setAlert({type:"",message:""})
 
     }
@@ -132,9 +132,9 @@ export default function NoteApp() {
         if(selectedNote===null)
         {
             // eslint-disable-next-line dot-location
-            API.post('/noteapp',{heading:heading,content:content},{headers:{"Content-Type":"application/json"}}).
+            API.post('/notes',{noteTitle:heading,noteBody:content},{headers:{"Content-Type":"application/json"}}).
             then((res)=>{
-                if(res.data.created)
+                if(res.data.success)
                 {
                     
                     setAlert({type:"success",message:`Note saved`})
@@ -160,9 +160,9 @@ export default function NoteApp() {
         else
         {
             // eslint-disable-next-line dot-location
-            API.put('/noteapp',{idx:selectedNote,heading:heading,content:content},{headers:{"Content-Type":"application/json"}}).
+            API.put('/notes',{noteId:notes[selectedNote].noteId,noteTitle:heading,noteBody:content},{headers:{"Content-Type":"application/json"}}).
             then((res)=>{
-                if(res.data.updated)
+                if(res.data.success)
                 {
                     
                     setAlert({type:"success",message:`Note updated`})
@@ -201,9 +201,10 @@ export default function NoteApp() {
         
          // eslint-disable-next-line dot-location
          setLoading(true)
-        API.delete('/noteapp',{data:{idx:idx}},{headers:{"Content-Type":"application/json"}}).
+        // eslint-disable-next-line no-useless-concat
+        API.delete('/notes/'+`${idx}`,{headers:{"Content-Type":"application/json"}}).
             then((res)=>{
-                if(res.data.deleted)
+                if(res.data.success)
                 {
                     
                     setAlert({type:"success",message:`Note deleted`})
@@ -236,18 +237,18 @@ export default function NoteApp() {
         return
     }
     const noteElements = notes.map((value,index)=>{
-        const title = JSON.stringify(value.heading)
+        const title = JSON.stringify(value.noteTitle)
          if(!isInputValid(query))
          {
-           return <Note select={index===selectedNote} selectNote={selectNote} deleteNote={deleteNote} hide={false} value={value} index={index}/>
+           return <Note noteId={value.noteId} select={index===selectedNote} selectNote={selectNote} deleteNote={deleteNote} hide={false} value={value} index={index}/>
          }  
-        return <Note select={index===selectedNote} selectNote={selectNote} deleteNote={deleteNote} hide={!title.toLowerCase().includes(query.toLowerCase())} value={value} index={index}/>
+        return <Note noteId={value.noteId} select={index===selectedNote} selectNote={selectNote} deleteNote={deleteNote} hide={!title.toLowerCase().includes(query.toLowerCase())} value={value} index={index}/>
     })
     const getNotes= () => {
         setLoading(true)
-        API.get('/noteapp',{ headers: { "Content-Type": "application/json" }})
+        API.get('/notes/allNotes',{ headers: { "Content-Type": "application/json" }})
         .then((res)=>{
-            setNotes([...res.data.notes])
+            setNotes([...res.data.data])
             setSelectedNote(null)
             setLoading(false)
             return 

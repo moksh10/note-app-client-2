@@ -10,8 +10,8 @@ function Note(props) {
         
         // eslint-disable-next-line no-useless-concat
         <div className={"note-div"+`${hide?" note-div-hide":""}`+`${select?" note-div-select":""}`}>
-        <div className="note-div-title" onClick={()=>{props.selectNote(props.index)}}>{props.value.heading}</div>
-        <div className="note-div-delete" onClick={()=>{props.deleteNote(props.index)}}>{deleteIcon}</div>
+        <div className="note-div-title" onClick={()=>{props.selectNote(props.index)}}>{props.value.noteTitle}</div>
+        <div className="note-div-delete" onClick={()=>{props.deleteNote(props.noteId)}}>{deleteIcon}</div>
          </div>
     )
 }

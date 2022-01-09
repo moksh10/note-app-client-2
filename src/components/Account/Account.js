@@ -25,13 +25,17 @@ function Account() {
   
       }
       const updatePassword=()=>{
-        API.put('/account',{newPassword:passwords.password},{ headers: { "Content-Type": "application/json" }})
+        const reqBody={userName:userInfo.name,email:userInfo.email,password:passwords.password}
+        API.put('/noteuser',reqBody,{ headers: { "Content-Type": "application/json" }})
         .then((res)=>{
-            if(res.data.updated)
+            if(res.data.success)
             {
                 
             setAlert({type:"success",message:`Password updated`})
             setTimeout(()=>{setAlert({type:"",message:""})},3000)
+            const reset={password:"",confirmPassword:""}
+            setPasswords(reset)
+            setDisabled(true)
             res=null
             return
 
@@ -50,12 +54,10 @@ function Account() {
 
       }
       const logoutUser = () =>{
-        API.post('/account/logout',{ headers: { "Content-Type": "application/json" }})
+        API.post('/logoutUser',{ headers: { "Content-Type": "application/json" }})
         .then((res)=>{
-            if(res.data.loggedOut)
+            if(res.data.success)
             {
-            
-            res=null
             history.push('/login')
             return
 
@@ -73,9 +75,11 @@ function Account() {
 
       }
       useEffect(()=>{
-        API.get('/account',{ headers: { "Content-Type": "application/json" }})
+        API.get('/noteuser',{ headers: { "Content-Type": "application/json" }})
         .then((res)=>{
-            setUserInfo(res.data)
+            const info=res.data.data
+            const newInfo = {name:info.userName,email:info.email}
+            setUserInfo(newInfo)
             return 
            
         })

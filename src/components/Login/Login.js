@@ -17,9 +17,8 @@ function Login() {
     
       }
       const handleSubmit = () =>{
-          API.post('/login',userInfo,{ headers: { "Content-Type": "application/json" } })
+          API.post('/auth',userInfo,{ headers: { "Content-Type": "application/json" } })
           .then((res)=>{
-              res=null
               setAlert({type:"",message:``})
               history.push('/noteapp')
               return

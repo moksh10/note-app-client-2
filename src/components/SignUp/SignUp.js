@@ -29,9 +29,10 @@ function SignUp() {
     }
     const handleSubmit=() =>{
         setLoading(true)
-        API.post('/signup',userInfo,{headers:{"Content-Type":"application/json"}})
+        const reqBody = {email:userInfo.email,password:userInfo.password,userName:userInfo.name}
+        API.post('/noteuser',reqBody,{headers:{"Content-Type":"application/json"}})
         .then((res)=>{
-            if(res.data.created)
+            if(res.data.success)
             {
             setLoading(false)                
             setAlert({type:"success",message:`Account created`})
@@ -51,6 +52,7 @@ function SignUp() {
 
         })
     }
+    
     
     return (
         <>

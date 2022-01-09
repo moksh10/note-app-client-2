@@ -6,9 +6,9 @@ import { Redirect } from 'react-router'
 export default function NoteAuth() {
   const [ notePrivateRoute, setPrivate] = useState(<></>)
   useEffect(() => {
-    API.get('/auth')
+    API.get('/isAuth')
     .then((res)=>{
-        if(res.status===200)
+        if(res.data.success)
         {
             setPrivate(<NoteApp />)
         }
